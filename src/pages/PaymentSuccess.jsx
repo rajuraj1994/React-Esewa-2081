@@ -10,8 +10,6 @@ const PaymentSuccess = () => {
     const navigate = useNavigate();
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
     const shippingInfo = JSON.parse(localStorage.getItem('shippingInfo'));
-
-
     const { user, token } = isAuthenticated();
 
     const order = {
@@ -26,43 +24,57 @@ const PaymentSuccess = () => {
     };
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const status = params.get('status');
-        const transactionCode = params.get('transaction_code');
-
-        if (status === 'COMPLETE') {
-            // Process the success data, such as saving order details to the database
-            console.log('Payment Success:', transactionCode);
-
+        const processPayment = async () => {
             try {
-                const config = {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    }
+                const params = new URLSearchParams(window.location.search);
+                const encodedData = params.get('data');
+                
+                if (!encodedData) {
+                    navigate('/payment-failure');
+                    return;
                 }
-                const { data } = axios.post(`${APP_URL}/postorder`, order, config)
-                localStorage.removeItem('cartItems')
-                // Redirect to thank-you page
-                navigate('/thank-you');
-            }
-            catch (error) {
-                toast.error(error)
-            }
+                
+                const decodedData = atob(encodedData);
+                console.log('Decoded Response:', decodedData);
 
-        } else {
-            // If not successful, navigate to failure page
-            navigate('/payment-failure');
-        }
-    }, [navigate]);
+                const paymentData = JSON.parse(decodedData);
+
+                if (paymentData.status === 'COMPLETE') {
+                    console.log('Payment Success:', paymentData.transaction_code);
+
+                    const config = {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        }
+                    };
+
+                    // Save order details to the database
+                    const { data } = await axios.post(`${APP_URL}/postorder`, order, config);
+                    localStorage.removeItem('cartItems');
+
+                    // Redirect to thank-you page
+                    navigate('/thank-you');
+                } else {
+                    // If payment was not successful
+                    navigate('/payment-failure');
+                }
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                toast.error('Error processing payment');
+                navigate('/payment-failure');
+            }
+        };
+
+        processPayment();
+    }, [navigate, token, order]);
 
     return (
         <>
             <ToastContainer theme="colored" />
-            <h1>Processing Payment...</h1>;
+            <h1>Processing Payment...</h1>
         </>
-
-    )
+    );
 };
 
 export default PaymentSuccess;

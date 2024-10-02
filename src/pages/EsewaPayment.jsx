@@ -6,7 +6,7 @@ import { isAuthenticated } from '../auth';
 import { APP_URL } from '../config';
 
 const EsewaPayment = () => {
-    const { user, token } = isAuthenticated();
+    const {token } = isAuthenticated();
 
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
 
@@ -56,6 +56,12 @@ const EsewaPayment = () => {
             signatureInput.name = 'signature';
             signatureInput.value = signature;
             form.appendChild(signatureInput);
+
+            const signedFieldNames = document.createElement('input');
+            signedFieldNames.type = 'hidden';
+            signedFieldNames.name = 'signed_field_names';
+            signedFieldNames.value = "total_amount,transaction_uuid,product_code";
+            form.appendChild(signedFieldNames);
 
             document.body.appendChild(form);
             form.submit();

@@ -54,7 +54,7 @@ const Cart = () => {
       <ToastContainer theme="colored" position="top-center" />
       <div className="container">
         <div className="row d-flex justify-content-between my-5">
-          {products.length === 0 ? (
+          {products && products.length === 0 ? (
             <h2 className="text-center text-danger mt-5">Your Cart is Empty</h2>
           ) : (
             <>
