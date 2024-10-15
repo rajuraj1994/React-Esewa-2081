@@ -22,9 +22,10 @@ import UpdateProduct from './admin/UpdateProduct'
 import Shipping from './pages/Shipping'
 import ConfirmOrder from './pages/ConfirmOrder'
 import EsewaPayment from './pages/EsewaPayment'
-import PaymentSuccess from './pages/PaymentSuccess'
+import PaymentSucces from './pages/PaymentSucces'
 import PaymentFailure from './pages/PaymentFailure'
 import ThankYou from './pages/ThankYou'
+
 
 const MyRoute = () => {
     return (
@@ -40,17 +41,17 @@ const MyRoute = () => {
                     <Route path='signin' element={<Login />} />
                     <Route path='forgetpassword' element={<ForgetPassword />} />
                     <Route path='reset/password/:token' element={<ResetPassword />} />
-                    <Route path='shipping' element={<Shipping />} />
-                    <Route path='confirm' element={<ConfirmOrder />} />
-                    <Route path="payment-success" element={<PaymentSuccess />} />
-                    <Route path="payment-failure" element={<PaymentFailure />} />
-                    <Route path="thank-you" element={<ThankYou />} />
+                    <Route path='shipping' element={<Shipping/>}/>
                 </Route>
 
                 <Route path='/*' element={<NotFound />} />
-                <Route path="/esewa-payment" element={<EsewaPayment />} />
-                <Route path='/profile' element={<UserRoute />}>
-                    <Route index element={<Profile />} />
+                <Route path='/' element={<UserRoute />}>
+                    <Route path='profile' element={<Profile />} />
+                    <Route path='confirm' element={<ConfirmOrder/>}/>
+                    <Route path='esewa-payment' element={<EsewaPayment/>}/>
+                    <Route path='payment-success' element={<PaymentSucces/>}/>
+                    <Route path='payment-failure' element={<PaymentFailure/>}/>
+                    <Route path='thank-you' element={<ThankYou/>}/>
                 </Route>
                 {/* admin route */}
                 <Route path='/admin/' element={<AdminRoute />}>

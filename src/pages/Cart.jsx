@@ -4,18 +4,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaTrash } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 import { IMG_URL } from "../config";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const cartData = JSON.parse(localStorage.getItem("cartItems"));
+    const cartData = JSON.parse(localStorage.getItem("cartItems")) || []
     setProducts(cartData);
   }, []);
   //increase quantity
   const increaseQty = (id) => {
     const updateProducts = products.map((item) => {
-      if (item.id === id && item.quantity<item.stock) {
+      if (item.id === id && item.quantity < item.stock) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
@@ -127,7 +129,11 @@ const Cart = () => {
                     )}
                   </p>
                   <hr />
-                  <button className="btn btn-warning">Check Out</button>
+                  <button className="btn btn-warning"
+                    onClick={() => navigate('/shipping')}
+                  >
+                    Check Out
+                  </button>
                 </div>
               </div>
             </>
